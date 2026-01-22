@@ -49,6 +49,14 @@ To get Google OAuth credentials:
 """
 
 import os
+
+from dotenv import load_dotenv
+
+# Load environment variables from .env file for local development
+# and Modal CLI commands (modal run app.py::init_admin, etc.)
+# In production Modal containers, secrets are injected directly.
+load_dotenv()
+
 import modal
 
 # =============================================================================

@@ -20,9 +20,11 @@ This template teaches you how to combine several powerful technologies:
 ```
 statefulmodal/
 ├── app.py              # Main application (heavily commented for learning)
-├── requirements.txt    # Python dependencies
-├── README.md          # This file
-└── .gitignore         # Git ignore patterns
+├── pyproject.toml      # Project configuration and dependencies
+├── .env.example        # Template for environment variables
+├── README.md           # This file
+├── AGENTS.md           # Instructions for AI coding agents
+└── .gitignore          # Git ignore patterns
 ```
 
 ## 🚀 Quick Start
@@ -33,10 +35,20 @@ statefulmodal/
 2. **Modal account** - Sign up free at [modal.com](https://modal.com)
 3. **Google Cloud account** - For OAuth (optional, but recommended)
 
-### Step 1: Install Modal CLI
+### Step 1: Install Dependencies
 
+Using [uv](https://docs.astral.sh/uv/) (recommended):
 ```bash
-pip install modal
+uv sync
+```
+
+Or with pip:
+```bash
+pip install -e .
+```
+
+Then authenticate with Modal:
+```bash
 modal token new
 ```
 
@@ -74,6 +86,22 @@ modal secret create google-oauth \
 ```
 
 </details>
+
+### Step 3b: Local Development with .env (Alternative)
+
+For local development, you can use a `.env` file instead of Modal Secrets:
+
+```bash
+cp .env.example .env
+# Edit .env with your credentials
+```
+
+The `.env` file is automatically loaded when running Modal CLI commands. This is useful for:
+- Quick iteration during development
+- Testing OAuth flow locally
+- Running CLI utilities like `modal run app.py::init_admin`
+
+**Note:** In production deployments, Modal Secrets are still recommended for security.
 
 ### Step 4: Add Your Admin Email
 

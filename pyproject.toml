@@ -1,0 +1,42 @@
+[project]
+name = "statefulmodal"
+version = "0.1.0"
+description = "A pedagogical template demonstrating Modal + FastHTML + SQLite for modern, stateful web applications"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Jake Mannix" }
+]
+keywords = ["modal", "fasthtml", "sqlite", "serverless", "web-application"]
+
+dependencies = [
+    "modal>=0.68.0",
+    "python-fasthtml>=0.12.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Repository = "https://github.com/jakemannix/statefulmodal"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.4.0",
+    "pytest>=8.0.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
