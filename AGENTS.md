@@ -13,7 +13,7 @@ StatefulModal is a pedagogical template demonstrating how to build modern, state
 
 ## Architecture
 
-This is a **single-file application** (`app.py`) organized into clearly-marked sections:
+The main application code lives in `statefulmodal/app.py`, organized into clearly-marked sections:
 
 1. **Modal App Configuration** (lines ~54-115) - Container image, volumes, secrets
 2. **Database Layer** (lines ~117-418) - SQLite abstraction with `User` dataclass and `Database` class
@@ -38,10 +38,10 @@ cp .env.example .env  # if it exists, otherwise create manually
 # Add: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
 
 # Development server (hot reload)
-modal serve app.py
+modal serve statefulmodal/app.py
 
 # Production deployment
-modal deploy app.py
+modal deploy statefulmodal/app.py
 ```
 
 ## Environment Variables
@@ -97,13 +97,13 @@ def new_route(session):
 
 ```bash
 # Add email to allowed list
-modal run app.py::init_admin --email=user@example.com
+modal run statefulmodal/app.py::init_admin --email=user@example.com
 
 # List all users and allowed emails
-modal run app.py::list_users
+modal run statefulmodal/app.py::list_users
 
 # Grant admin privileges
-modal run app.py::make_admin --email=user@example.com
+modal run statefulmodal/app.py::make_admin --email=user@example.com
 ```
 
 ## Testing Locally
@@ -112,7 +112,7 @@ The app requires Modal to run, but you can test components:
 
 ```bash
 # Serve with hot reload
-modal serve app.py
+modal serve statefulmodal/app.py
 
 # Access at the URL printed by Modal (e.g., https://yourname--statefulmodal-web-dev.modal.run)
 ```
@@ -138,7 +138,9 @@ modal serve app.py
 
 ```
 statefulmodal/
-├── app.py              # Main application (all code in one file)
+├── statefulmodal/      # Python package
+│   ├── __init__.py     # Package exports (app, create_app, Database, User)
+│   └── app.py          # Main application code
 ├── pyproject.toml      # Project configuration and dependencies
 ├── README.md           # User-facing documentation
 ├── AGENTS.md           # This file (agent instructions)
@@ -149,8 +151,9 @@ statefulmodal/
 
 ## Notes for Agents
 
-- The codebase is intentionally kept in a single file for pedagogical clarity
+- The main application code is in `statefulmodal/app.py` for pedagogical clarity
 - When making changes, preserve the section organization and comments
 - Environment variables are loaded from `.env` via `python-dotenv` at module load time
 - Modal functions (`init_admin`, `list_users`, etc.) will have access to `.env` vars
 - SQLite database lives on a Modal Volume at `/data/app.db`
+- You can import from the package: `from statefulmodal import app, Database, User`

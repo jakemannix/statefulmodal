@@ -19,7 +19,9 @@ This template teaches you how to combine several powerful technologies:
 
 ```
 statefulmodal/
-├── app.py              # Main application (heavily commented for learning)
+├── statefulmodal/      # Python package
+│   ├── __init__.py     # Package exports
+│   └── app.py          # Main application (heavily commented for learning)
 ├── pyproject.toml      # Project configuration and dependencies
 ├── .env.example        # Template for environment variables
 ├── README.md           # This file
@@ -99,7 +101,7 @@ cp .env.example .env
 The `.env` file is automatically loaded when running Modal CLI commands. This is useful for:
 - Quick iteration during development
 - Testing OAuth flow locally
-- Running CLI utilities like `modal run app.py::init_admin`
+- Running CLI utilities like `modal run statefulmodal/app.py::init_admin`
 
 **Note:** In production deployments, Modal Secrets are still recommended for security.
 
@@ -108,7 +110,7 @@ The `.env` file is automatically loaded when running Modal CLI commands. This is
 Before deploying, add yourself as an allowed user:
 
 ```bash
-modal run app.py::init_admin --email=your-email@gmail.com
+modal run statefulmodal/app.py::init_admin --email=your-email@gmail.com
 ```
 
 ### Step 5: Deploy!
@@ -116,18 +118,18 @@ modal run app.py::init_admin --email=your-email@gmail.com
 **For development** (creates temporary URL, hot-reloads on changes):
 
 ```bash
-modal serve app.py
+modal serve statefulmodal/app.py
 ```
 
 **For production** (creates permanent URL):
 
 ```bash
-modal deploy app.py
+modal deploy statefulmodal/app.py
 ```
 
 ## 📖 Understanding the Code
 
-The `app.py` file is extensively commented to explain each concept. Here's an overview:
+The `statefulmodal/app.py` file is extensively commented to explain each concept. Here's an overview:
 
 ### Section 1: Modal App Configuration
 
@@ -227,8 +229,9 @@ class AppAuth(OAuth):
     image=image,
     volumes={"/data": volume},
     secrets=[modal.Secret.from_name("google-oauth")],
-    allow_concurrent_inputs=10,
+    scaledown_window=300,
 )
+@modal.concurrent(max_inputs=10)
 @modal.asgi_app()
 def web():
     return create_app()
@@ -236,6 +239,7 @@ def web():
 
 **Key concepts:**
 - **`@app.function`**: Defines a Modal function with resources
+- **`@modal.concurrent`**: Allow concurrent requests to the same container
 - **`@modal.asgi_app()`**: Exposes as web endpoint
 - **Secrets injection**: Environment variables from Modal Secrets
 
@@ -245,13 +249,13 @@ The template includes helpful CLI utilities:
 
 ```bash
 # Add an email to the allowed list
-modal run app.py::init_admin --email=user@example.com
+modal run statefulmodal/app.py::init_admin --email=user@example.com
 
 # List all users and allowed emails
-modal run app.py::list_users
+modal run statefulmodal/app.py::list_users
 
 # Grant admin privileges to a user
-modal run app.py::make_admin --email=user@example.com
+modal run statefulmodal/app.py::make_admin --email=user@example.com
 ```
 
 ## 🏗️ Extending the Template

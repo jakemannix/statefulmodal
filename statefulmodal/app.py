@@ -1145,21 +1145,21 @@ def create_app():
     volumes={VOLUME_PATH: volume},
 
     # Inject secrets as environment variables
-    # These are securely stored in Modal and not visible in code
+    # Uses .env file for local dev, Modal Secrets for production
+    # OAuth is optional - app works without it (no login functionality)
     secrets=[
-        modal.Secret.from_name("google-oauth", required=False),
+        modal.Secret.from_dotenv(__file__),
     ],
 
-    # Allow concurrent requests to the same container
-    # This improves performance by reusing warm containers
-    # Note: SQLite handles concurrent reads well, but writes are serialized
-    allow_concurrent_inputs=10,
-
     # Container lifecycle settings
-    # container_idle_timeout: How long to keep warm containers alive
+    # scaledown_window: How long to keep warm containers alive
     # This reduces cold start latency for subsequent requests
-    container_idle_timeout=300,  # 5 minutes
+    scaledown_window=300,  # 5 minutes
 )
+# Allow concurrent requests to the same container
+# This improves performance by reusing warm containers
+# Note: SQLite handles concurrent reads well, but writes are serialized
+@modal.concurrent(max_inputs=10)
 @modal.asgi_app()
 def web():
     """
