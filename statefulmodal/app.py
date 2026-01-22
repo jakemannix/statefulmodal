@@ -1149,6 +1149,7 @@ def create_app():
     # OAuth is optional - app works without it (no login functionality)
     secrets=[
         modal.Secret.from_dotenv(__file__),
+        modal.Secret.from_name("google-oauth", required_keys=["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"]),
     ],
 
     # Container lifecycle settings
@@ -1259,20 +1260,20 @@ def make_admin(email: str):
 
 if __name__ == "__main__":
     print("""
-    ╔═══════════════════════════════════════════════════════════════════╗
+    ╔════════════════════════════════════════════════════════════════════╗
     ║                    StatefulModal Template                          ║
-    ╠═══════════════════════════════════════════════════════════════════╣
+    ╠════════════════════════════════════════════════════════════════════╣
     ║                                                                    ║
-    ║  For local development:                                           ║
-    ║      modal serve app.py                                           ║
+    ║  For local development:                                            ║
+    ║      modal serve app.py                                            ║
     ║                                                                    ║
     ║  For production deployment:                                        ║
-    ║      modal deploy app.py                                          ║
+    ║      modal deploy app.py                                           ║
     ║                                                                    ║
     ║  To add an initial admin:                                          ║
-    ║      modal run app.py::init_admin --email=you@example.com        ║
+    ║      modal run app.py::init_admin --email=you@example.com          ║
     ║                                                                    ║
     ║  See README.md for complete setup instructions.                    ║
     ║                                                                    ║
-    ╚═══════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════════╝
     """)
